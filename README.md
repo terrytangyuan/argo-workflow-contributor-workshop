@@ -1,5 +1,12 @@
 # argo-workflow-contributor-workshop
 
+## Prerequisites
+
+* K3d
+* Docker
+* kubectl
+* Golang 1.20
+
 
 ## Installation
 
@@ -46,7 +53,36 @@ echo $ARGO_TOKEN
 
 ## Examples
 
+### Hello World
+
 ```
 kubectl create -f examples/hello-world.yaml
+kubectl describe wf hello-world
+
 kubectl logs -n argo deploy/workflow-controller | grep workflow=hello-world
+
+kubectl logs hello-world -c init
+kubectl logs hello-world -c wait
+kubectl logs hello-world -c main
 ```
+
+### K8s Resource Template
+
+```
+kubectl create -f examples/k8s-resource.yaml
+kubectl describe pod k8s-jobs
+kubectl logs k8s-jobs -c init
+kubectl logs k8s-jobs -c main
+```
+
+### Coin-flip
+
+```
+kubectl create -f examples/coinflip.yaml
+kubectl logs -n argo deploy/workflow-controller | grep workflow=coinflip
+```
+
+## Running Controller Locally
+
+For quick debug and development.
+

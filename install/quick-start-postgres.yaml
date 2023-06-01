@@ -927,6 +927,12 @@ rules:
   - get
   - update
 - apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - "*"
+- apiGroups:
   - ""
   resources:
   - pods
