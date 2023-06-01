@@ -82,7 +82,26 @@ kubectl create -f examples/coinflip.yaml
 kubectl logs -n argo deploy/workflow-controller | grep workflow=coinflip
 ```
 
+## Inspect Database
+
+```
+# Get into the database pod
+kubectl exec --stdin --tty `kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep postgres` -- bin/bash
+
+# Log in database
+psql --username postgres
+
+# List table schema
+\d argo_archived_workflows
+
+# List archived workflows
+SELECT * from argo_archived_workflows LIMIT 5;
+```
+
 ## Running Controller Locally
 
 For quick debug and development.
+
+TBD
+
 
