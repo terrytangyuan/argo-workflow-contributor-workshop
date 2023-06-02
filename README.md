@@ -155,10 +155,16 @@ SELECT * from argo_archived_workflows LIMIT 5;
 
 ## Running Controller Locally
 
-For quick debug and development.
-TODO: Remove k8s deployment controller to avoid conflicts.
+```
+kubectl delete namespace argo
+kubectl create namespace argo
+kubectl apply -n argo -f install/quick-start-simple.yaml
+kubectl config set-context --current --namespace argo
 
-TBD: Turn off debug level
+git clone https://github.com/argoproj/argo-workflows.git $GOPATH/src/github.com/argoproj/argo-workflows
+cd $GOPATH/src/github.com/argoproj/argo-workflows
+LEADER_ELECTION_DISABLE=true go run ./cmd/workflow-controller/main.go -n argo --gloglevel 6
+```
 
 
 ## Exercises
@@ -166,7 +172,4 @@ TBD: Turn off debug level
 Where to debug? Provide example exercises. artifact upload issue, main container issue, init container issue, etc. controller log. archiving failed, k8s resource template permission issue
 
 1. Modify `examples/coinflip.yaml` so that the 'flip-coin' step is recursively repeated until the result of the step is "heads".
-1. K8s resource template
-1. GC, pod, artifacts
-
-
+1. Add another step in `examples/k8s-resource.yaml` to print out the output parameters of the K8s resource template.
