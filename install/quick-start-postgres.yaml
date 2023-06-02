@@ -996,6 +996,8 @@ rules:
   - list
   - watch
   - deletecollection
+  - create
+  - patch
 - apiGroups:
   - ""
   resources:

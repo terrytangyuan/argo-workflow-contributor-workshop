@@ -24,6 +24,7 @@ spec:
       # https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
       successCondition: status.succeeded > 0
       failureCondition: status.failed > 2
+      setOwnerReference: true
       manifest: |
         apiVersion: batch/v1
         kind: Job

@@ -59,7 +59,7 @@ echo $ARGO_TOKEN
 kubectl create -f examples/hello-world.yaml
 kubectl describe wf hello-world
 
-kubectl logs -n argo deploy/workflow-controller | grep workflow=hello-world
+kubectl logs deploy/workflow-controller | grep workflow=hello-world
 
 kubectl logs hello-world -c init
 kubectl logs hello-world -c wait
@@ -79,7 +79,28 @@ kubectl logs k8s-jobs -c main
 
 ```
 kubectl create -f examples/coinflip.yaml
-kubectl logs -n argo deploy/workflow-controller | grep workflow=coinflip
+kubectl logs deploy/workflow-controller | grep workflow=coinflip
+```
+
+### ContainerSet Template
+
+```
+kubectl create -f examples/containerset.yaml
+kubectl describe pod containerset
+kubectl logs containerset -c a
+kubectl logs containerset -c b
+kubectl logs containerset -c init
+kubectl logs containerset -c wait
+```
+
+### HTTP Template
+
+```
+kubectl create -f examples/http-template.yaml
+kubectl describe pod http-template
+kubectl logs http-template
+kubectl logs deploy/workflow-controller | grep workflow=http-template
+kubectl describe workflowtaskset http-template
 ```
 
 ## Inspect Database
