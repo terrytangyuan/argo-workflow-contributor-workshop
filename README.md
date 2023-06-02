@@ -53,36 +53,31 @@ echo $ARGO_TOKEN
 
 ## Examples
 
-### Hello World
+### Workflows with Single Template
+
+#### Hello World
 
 ```
 kubectl create -f examples/hello-world.yaml
 kubectl describe wf hello-world
-
 kubectl logs deploy/workflow-controller | grep workflow=hello-world
-
 kubectl logs hello-world -c init
 kubectl logs hello-world -c wait
 kubectl logs hello-world -c main
 ```
 
-### K8s Resource Template
+#### K8s Resource Template
 
 ```
 kubectl create -f examples/k8s-resource.yaml
 kubectl describe pod k8s-jobs
+kubectl logs deploy/workflow-controller | grep workflow=k8s-resource
 kubectl logs k8s-jobs -c init
 kubectl logs k8s-jobs -c main
 ```
 
-### Coin-flip
 
-```
-kubectl create -f examples/coinflip.yaml
-kubectl logs deploy/workflow-controller | grep workflow=coinflip
-```
-
-### ContainerSet Template
+#### ContainerSet Template
 
 ```
 kubectl create -f examples/containerset.yaml
@@ -93,7 +88,7 @@ kubectl logs containerset -c init
 kubectl logs containerset -c wait
 ```
 
-### HTTP Template
+#### HTTP Template
 
 ```
 kubectl create -f examples/http-template.yaml
@@ -102,6 +97,29 @@ kubectl logs http-template
 kubectl logs deploy/workflow-controller | grep workflow=http-template
 kubectl describe workflowtaskset http-template
 ```
+
+### Workflows with Multiple Templates
+
+#### Coin-flip
+
+Defined as steps:
+
+```
+kubectl create -f examples/coinflip.yaml
+kubectl describe wf coinflip-dag
+kubectl logs deploy/workflow-controller | grep workflow=coinflip
+```
+
+#### Diamond
+
+Defined as DAG:
+
+```
+kubectl create -f examples/dag-diamond.yaml
+kubectl describe wf dag-diamond
+kubectl logs deploy/workflow-controller | grep workflow=dag-diamond
+```
+
 
 ## Inspect Database
 
@@ -122,7 +140,18 @@ SELECT * from argo_archived_workflows LIMIT 5;
 ## Running Controller Locally
 
 For quick debug and development.
+TODO: Remove k8s deployment controller to avoid conflicts.
 
-TBD
+TBD: Turn off debug level
+
+
+## Exercises
+
+Where to debug? Provide example exercises. artifact upload issue, main container issue, init container issue, etc. controller log. archiving failed, k8s resource template permission issue
+
+TODO: Debug pause
+
+1. Modify `examples/coinflip.yaml` so that the 'flip-coin' step is recursively repeated until the result of the step is "heads".
+1. K8s resource template
 
 
