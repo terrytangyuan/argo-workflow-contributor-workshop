@@ -120,8 +120,24 @@ kubectl describe wf dag-diamond
 kubectl logs deploy/workflow-controller | grep workflow=dag-diamond
 ```
 
+### Debugging
 
-## Inspect Database
+#### Debug Pause
+
+```
+kubectl create -f examples/debug-pause.yaml
+
+# Create a shell in the container of interest of create a ephemeral container in the pod, in this example ephemeral containers are used.
+kubectl debug -n argo -it debug-pause --image=busybox --target=main --share-processes
+
+# Create the marker file to allow the workflow step to continue
+touch /proc/1/root/run/argo/ctr/main/after
+
+kubectl describe pod debug-pause
+```
+
+
+#### Inspect Database
 
 ```
 # Get into the database pod
@@ -149,9 +165,8 @@ TBD: Turn off debug level
 
 Where to debug? Provide example exercises. artifact upload issue, main container issue, init container issue, etc. controller log. archiving failed, k8s resource template permission issue
 
-TODO: Debug pause
-
 1. Modify `examples/coinflip.yaml` so that the 'flip-coin' step is recursively repeated until the result of the step is "heads".
 1. K8s resource template
+1. GC, pod, artifacts
 
 
