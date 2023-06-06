@@ -41,6 +41,14 @@ metadata:
     kubernetes.io/service-account.name: argo-server
   name: argo-server
 type: kubernetes.io/service-account-token
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    kubernetes.io/service-account.name: default
+  name: default.service-account-token
+type: kubernetes.io/service-account-token
 EOF
 
 echo "\n\n"
