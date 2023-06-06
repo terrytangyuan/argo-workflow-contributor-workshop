@@ -13,8 +13,7 @@
 Install Argo:
 
 ```
-k3d cluster rm k3s-default; k3d cluster create k3s-default --image rancher/k3s:v1.25.3-rc3-k3s1; 
-
+k3d cluster rm argo-workshop; k3d cluster create argo-workshop --image rancher/k3s:v1.25.3-rc3-k3s1;
 kubectl create namespace argo
 kubectl apply -n argo -f install/quick-start-postgres.yaml
 kubectl config set-context --current --namespace argo
@@ -38,9 +37,9 @@ kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
-  name: argo-server
   annotations:
     kubernetes.io/service-account.name: argo-server
+  name: argo-server
 type: kubernetes.io/service-account-token
 EOF
 
@@ -92,8 +91,7 @@ kubectl logs containerset -c wait
 
 ```
 kubectl create -f examples/http-template.yaml
-kubectl describe pod http-template
-kubectl logs http-template
+kubectl logs -l workflows.argoproj.io/workflow=http-template
 kubectl logs deploy/workflow-controller | grep workflow=http-template
 kubectl describe workflowtaskset http-template
 ```
