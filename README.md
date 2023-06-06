@@ -182,5 +182,5 @@ kubectl describe pod hello-world
 
 ## Exercises
 
-1. Modify `examples/coinflip.yaml` so that the 'flip-coin' step is recursively repeated until the result of the step is "heads".
-1. Add another step in `examples/k8s-resource.yaml` to print out the name of the K8s Job from the resource template.
+1. Modify `examples/coinflip.yaml` so that the 'flip-coin' step is recursively repeated until the result of the step is "heads". Hint: modify `coinflip.tails` template.
+2. Add another step in `examples/k8s-resource.yaml` to print out the name of the K8s Job from the resource template. Hint: create a multi-step template where the new step takes the output of the previous step as the input parameter.
