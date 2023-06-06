@@ -42,6 +42,8 @@ spec:
         metadata:
           generateName: rand-num-
         spec:
+          completions: 3
+          parallelism: 3
           template:
             metadata:
               name: rand
