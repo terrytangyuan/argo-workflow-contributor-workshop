@@ -6,11 +6,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  name: k8s-jobs
+  name: k8s-jobs-output
 spec:
-  entrypoint: rand-num
+  entrypoint: k8s-orchestrate
   serviceAccountName: argo
   templates:
+  - name: k8s-orchestrate
+    steps:
+    - - name: k8s-job
+        template: rand-num
+    - - name: print-job-name
+        template: print-job-name
+        arguments:
+          parameters:
+          - name: job-name
+            value: '{{steps.k8s-job.outputs.parameters.job-name}}'
+
   - name: rand-num
     resource:
       action: create
@@ -55,3 +66,12 @@ spec:
       - name: job-obj
         valueFrom:
           jqFilter: '.'
+
+  - name: print-job-name
+    inputs:
+      parameters:
+      - name: job-name
+    container:
+      image: docker/whalesay:latest
+      command: [cowsay]
+      args: ["{{inputs.parameters.job-name}}"]

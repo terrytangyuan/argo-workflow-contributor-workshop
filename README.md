@@ -22,17 +22,15 @@ kubectl config set-context --current --namespace argo
 
 Wait for successful deployments:
 ```
+kubectl logs -n argo deploy/postgres | grep 'database system is ready to accept connections'
 kubectl logs -n argo deploy/argo-server | grep 'Argo Server started successfully'
 kubectl logs -n argo deploy/workflow-controller | grep 'Persistence Session created successfully'
 ```
-
 
 Open another terminal and execute:
 ```
 kubectl port-forward svc/argo-server 31298:2746
 ```
-
-https://127.0.0.1:31298
 
 Obtain a token:
 ```
@@ -46,10 +44,13 @@ metadata:
 type: kubernetes.io/service-account-token
 EOF
 
+echo "\n\n"
 export SECRET=argo-server
 ARGO_TOKEN="Bearer $(kubectl get secret $SECRET -o=jsonpath='{.data.token}' | base64 --decode)"
 echo $ARGO_TOKEN
 ```
+
+Access the UI: https://127.0.0.1:31298
 
 ## Examples
 
@@ -75,7 +76,6 @@ kubectl logs deploy/workflow-controller | grep workflow=k8s-resource
 kubectl logs k8s-jobs -c init
 kubectl logs k8s-jobs -c main
 ```
-
 
 #### ContainerSet Template
 
@@ -163,13 +163,24 @@ kubectl config set-context --current --namespace argo
 
 git clone https://github.com/argoproj/argo-workflows.git $GOPATH/src/github.com/argoproj/argo-workflows
 cd $GOPATH/src/github.com/argoproj/argo-workflows
-LEADER_ELECTION_DISABLE=true go run ./cmd/workflow-controller/main.go -n argo --gloglevel 6
+LEADER_ELECTION_DISABLE=true go run ./cmd/workflow-controller/main.go -n argo --gloglevel 6 --namespaced --loglevel debug
+
+kubectl create -f examples/hello-world.yaml
 ```
 
+If there are changes in executor code, we need to rebuild the executor image:
+
+```
+docker buildx build --no-cache -t argoproj/argoexec:test-oss-1 --target argoexec --progress plain .
+k3d image import argoproj/argoexec:test-oss-1
+
+LEADER_ELECTION_DISABLE=true go run ./cmd/workflow-controller/main.go -n argo --gloglevel 6 --namespaced --loglevel debug --executor-image argoproj/argoexec:test-oss-1 --executor-image-pull-policy IfNotPresent
+
+kubectl create -f examples/hello-world.yaml
+kubectl describe pod hello-world
+```
 
 ## Exercises
 
-Where to debug? Provide example exercises. artifact upload issue, main container issue, init container issue, etc. controller log. archiving failed, k8s resource template permission issue
-
 1. Modify `examples/coinflip.yaml` so that the 'flip-coin' step is recursively repeated until the result of the step is "heads".
-1. Add another step in `examples/k8s-resource.yaml` to print out the output parameters of the K8s resource template.
+1. Add another step in `examples/k8s-resource.yaml` to print out the name of the K8s Job from the resource template.
