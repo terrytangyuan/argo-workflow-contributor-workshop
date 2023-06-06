@@ -1,4 +1,4 @@
-# argo-workflow-contributor-workshop
+# Contributor Workshop
 
 ## Prerequisites
 
