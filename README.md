@@ -112,7 +112,7 @@ Defined as steps:
 
 ```
 kubectl create -f examples/coinflip.yaml
-kubectl describe wf coinflip-dag
+kubectl describe wf coinflip
 kubectl logs deploy/workflow-controller | grep workflow=coinflip
 ```
 
