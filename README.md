@@ -1,5 +1,9 @@
 # Contributor Workshop
 
+## Presentation
+
+Slides for this workshop can be found [here](https://docs.google.com/presentation/d/1IU0a3unnr3tBRi38Zn3EHQZj3z6yvocfG9x9icRu1LE/edit?usp=sharing).
+
 ## Prerequisites
 
 * K3d
